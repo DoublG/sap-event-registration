@@ -3,3 +3,5 @@ node_modules/
 gen/
 .env
 app/site/dist/
+
+@cds-models

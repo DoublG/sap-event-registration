@@ -1,28 +1,28 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { api, session } from '../api.js'
-import { t, state } from '../i18n.js'
+import { api, session, type ChildRow, type RegistrationRow } from '../api'
+import { t, state } from '../i18n'
 
-const children = ref([])
-const registrations = ref([])
+const children = ref<ChildRow[]>([])
+const registrations = ref<RegistrationRow[]>([])
 const loading = ref(true)
 const error = ref('')
 const notice = ref('')
 
-const placesOf = id => registrations.value.filter(r => r.ninja_ID === id)
-const when = d => new Intl.DateTimeFormat(state.lang, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(d))
+const placesOf = (id: string) => registrations.value.filter(r => r.ninja_ID === id)
+const when = (d: string) => new Intl.DateTimeFormat(state.lang, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(d))
 const signedIn = computed(() => !!session.user)
 
 async function load() {
   if (!signedIn.value) { loading.value = false; return }
   try {
     ;[children.value, registrations.value] = await Promise.all([api.myNinjas(), api.myRegistrations()])
-  } catch (e) { error.value = e.message }
+  } catch (e) { error.value = (e as Error).message }
   loading.value = false
 }
 
-async function cancel(r) {
-  try { await api.cancel(r.ID); notice.value = t('cancelled'); await load() } catch (e) { error.value = e.message }
+async function cancel(r: RegistrationRow) {
+  try { await api.cancel(r.ID); notice.value = t('cancelled'); await load() } catch (e) { error.value = (e as Error).message }
 }
 onMounted(load)
 </script>

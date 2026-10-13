@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es2023",
+    "module": "es2022",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "allowJs": false,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "noEmit": true,
+    "rootDir": "./webapp",
+    "baseUrl": "./",
+    "types": [
+      "@sapui5/types"
+    ],
+    "paths": {
+      "coderdojo/dojoevents/*": [
+        "./webapp/*"
+      ]
+    }
+  },
+  "include": [
+    "./webapp/**/*"
+  ]
+}

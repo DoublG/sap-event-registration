@@ -14,16 +14,23 @@
   "devDependencies": {
     "@cap-js/cds-test": "^0.4",
     "@cap-js/sqlite": "^2.4.1",
-    "@sap/cds-dk": "^9.9.6"
+    "@sap/cds-dk": "^9.9.6",
+    "@cap-js/cds-typer": "^0.41.1",
+    "@cap-js/cds-types": "^0.20.0",
+    "@types/node": "^24.0.0",
+    "tsx": "^4",
+    "typescript": "^6.0.0",
+    "cds-plugin-ui5": "^0.17.4"
   },
   "scripts": {
     "start": "cds-serve",
-    "watch": "cds watch",
-    "build": "cds build --production",
-    "test": "node --test test/*.test.js",
-    "dev:site": "npm --prefix app/site run dev",
-    "build:site": "npm --prefix app/site run build",
-    "postinstall": "npm --prefix app/site install"
+    "watch": "cds-tsx watch",
+    "build": "npm run typer && cds build --production",
+    "test": "npm run typer && CDS_TYPESCRIPT=true node --import tsx --test test/*.test.ts",
+    "dev:site": "npm run dev -w app/site",
+    "build:site": "npm run build -w app/site",
+    "typer": "cds-typer \"*\" --outputDirectory @cds-models",
+    "typecheck": "npm run typer && tsc --noEmit && npm run typecheck --workspaces"
   },
   "cds": {
     "requires": {
@@ -82,5 +89,11 @@
         "auth": "xsuaa"
       }
     }
-  }
+  },
+  "imports": {
+    "#cds-models/*": "./@cds-models/*/index.js"
+  },
+  "workspaces": [
+    "app/*"
+  ]
 }

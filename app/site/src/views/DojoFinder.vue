@@ -1,20 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { api } from '../api.js'
-import { t } from '../i18n.js'
+import { api, type DojoRow } from '../api'
+import { t } from '../i18n'
 
-const dojos = ref([])
+const dojos = ref<DojoRow[]>([])
 const search = ref('')
 const loading = ref(true)
 const error = ref('')
 
 async function load() {
   loading.value = true
-  try { dojos.value = await api.dojos(search.value) } catch (e) { error.value = e.message }
+  try { dojos.value = await api.dojos(search.value) } catch (e) { error.value = (e as Error).message }
   loading.value = false
 }
-let timer
-const onInput = e => { search.value = e.target.value; clearTimeout(timer); timer = setTimeout(load, 300) }
+let timer: ReturnType<typeof setTimeout> | undefined
+const onInput = (e: Event) => { search.value = (e.target as HTMLInputElement).value; clearTimeout(timer); timer = setTimeout(load, 300) }
 onMounted(load)
 </script>
 
@@ -29,7 +29,7 @@ onMounted(load)
     <template v-else>
       <ui5-list :no-data-text="t('noDojos')">
         <ui5-li v-for="d in dojos" :key="d.ID" :description="d.tagline || d.address"
-          :additional-text="d.minAge ? t('ages', { min: d.minAge, max: d.maxAge }) : ''">{{ d.name }}</ui5-li>
+          :additional-text="d.minAge ? t('ages', { min: d.minAge, max: d.maxAge ?? '' }) : ''">{{ d.name }}</ui5-li>
       </ui5-list>
     </template>
   </section>

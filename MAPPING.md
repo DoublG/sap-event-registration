@@ -13,8 +13,8 @@ and ports one piece of real business logic to see how the rest would go.
   file per Django app). The model compiles for SQLite and SAP HANA and deploys to 75 tables, the extra
   ones being link tables and CAP's translation tables.
 - **Porting business logic works.** I ported `events/registrations.py` (sign-up, waiting list,
-  cancellation and promotion, with the row lock) to `srv/family-service.js`, and it passes the same
-  rules as the Django tests (`test/registration.test.js`, 13 tests). The code is about the same size as
+  cancellation and promotion, with the row lock) to `srv/family-service.ts`, and it passes the same
+  rules as the Django tests (`test/registration.test.ts`, 13 tests). The code is about the same size as
   the Python.
 - **Access control turns out shorter.** "Only your own children" and "only an active champion or mentor
   of this dojo" become one `@restrict … where: 'exists …'` line each in `srv/*.cds`. In Django they are
@@ -101,7 +101,7 @@ Django keeps a dojo's main-language text in the normal column and the other lang
 column, and *each dojo chooses its languages* (`Dojo.languages`).
 
 CAP's `localized` gives every translatable element a `_texts` table keyed by locale, and serves the
-user's locale with a fallback to the default. `test/registration.test.js` shows a Dutch tagline served
+user's locale with a fallback to the default. `test/registration.test.ts` shows a Dutch tagline served
 on `Accept-Language: nl`.
 
 Two consequences:
@@ -150,6 +150,23 @@ version stays the large job in the estimate below. Two findings:
   forbids on privacy grounds. `app/site` switches that off and serves the font files itself.
 - **The visual style becomes SAP's (Horizon theme)**, not CoderDojo's. Restyling needs a custom theme
   built with the UI5 Theme Designer or CSS variables, and that's extra work if the brand matters.
+
+## TypeScript
+
+Everything here is TypeScript: the service handlers, the tests, the Fiori components and the Vue site.
+- **Types come from the model.** SAP's `cds-typer` generates types for every entity, action and event
+  from the CDS model, so a handler's `req.data` and its query results are typed.
+- **The Vue site reuses those same types** for its OData rows. Renaming a field in the model breaks
+  the front end's type check, not production.
+
+The setup is SAP's own:
+- `cds add typescript,typer`;
+- `cds-tsx` for the dev server;
+- `cds build` compiles the handlers;
+- `cds-plugin-ui5` with `ui5-tooling-transpile` for the Fiori apps.
+
+The Django site's equivalent is mypy with django-stubs on a subset of modules. CAP's typing goes
+further, because the model generates it and it reaches the browser.
 
 ## Rough effort
 

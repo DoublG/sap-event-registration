@@ -1,0 +1,14 @@
+{
+  "name": "volunteer-applications",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fiori elements app (coderdojo.volunteerapplications), TypeScript",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@sapui5/types": "~1.148.0",
+    "typescript": "~5.9.3",
+    "ui5-tooling-transpile": "^3.13.1"
+  }
+}

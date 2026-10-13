@@ -1,16 +1,18 @@
+# UI5 tooling: cds-plugin-ui5 serves this app inside `cds watch` and runs
+# ui5-tooling-transpile, which compiles webapp/*.ts to UI5 modules on the fly
+# (and in `ui5 build`). UI5 itself comes from ui5.sap.com (webapp/index.html).
 specVersion: "4.0"
 metadata:
   name: coderdojo.dojoevents
 type: application
+builder:
+  customTasks:
+    - name: ui5-tooling-transpile-task
+      afterTask: replaceVersion
 server:
   customMiddleware:
-    - name: fiori-tools-proxy
+    - name: ui5-tooling-transpile-middleware
       afterMiddleware: compression
-      configuration:
-        backend:
-          - path: /dojo-admin
-            url: http://localhost:4004
-        ui5:
-          path: [/resources, /test-resources]
-          url: https://ui5.sap.com
-          version: 1.148.12
+customConfiguration:
+  cds-plugin-ui5:
+    mountPath: /dojo-events

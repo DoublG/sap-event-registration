@@ -1,38 +1,40 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { api, session } from '../api.js'
-import { t, state } from '../i18n.js'
+import { api, session, type SessionRow, type ChildRow } from '../api'
+import { t, state } from '../i18n'
 
-const sessions = ref([])
-const children = ref([])
+const sessions = ref<SessionRow[]>([])
+const children = ref<ChildRow[]>([])
 const loading = ref(true)
 const error = ref('')
-const results = ref([])     // what the last sign-up gave each child
-const dialog = ref(null)    // the session being signed up for
-const picked = ref(new Set())
+type Result = { design: 'Positive' | 'Critical'; text: string }
+const results = ref<Result[]>([])                // what the last sign-up gave each child
+const dialog = ref<SessionRow | null>(null)      // the session being signed up for
+const picked = ref(new Set<string>())
 
-const when = s => new Intl.DateTimeFormat(state.lang, { dateStyle: 'full', timeStyle: 'short' }).format(new Date(s.startTime))
+const when = (s: SessionRow) => new Intl.DateTimeFormat(state.lang, { dateStyle: 'full', timeStyle: 'short' }).format(new Date(s.startTime))
 
 onMounted(async () => {
   try {
     sessions.value = await api.sessions()
     if (session.user) children.value = await api.myNinjas()
-  } catch (e) { error.value = e.message }
+  } catch (e) { error.value = (e as Error).message }
   loading.value = false
 })
 
-function open(s) { dialog.value = s; picked.value = new Set(); results.value = [] }
-function toggle(id, checked) { checked ? picked.value.add(id) : picked.value.delete(id) }
+function open(s: SessionRow) { dialog.value = s; picked.value = new Set(); results.value = [] }
+function toggle(id: string, checked: boolean) { checked ? picked.value.add(id) : picked.value.delete(id) }
 
 async function confirm() {
+  if (!dialog.value) return
   error.value = ''
   try {
     const regs = await api.signUp(dialog.value.ID, [...picked.value])
-    const name = id => children.value.find(c => c.ID === id)?.name
+    const name = (id: string) => children.value.find(c => c.ID === id)?.name ?? ''
     results.value = regs.map(r => r.waitingList
-      ? { design: 'Critical', text: t('onWaitingList', { name: name(r.ninja_ID), position: r.position }) }
-      : { design: 'Positive', text: t('gotPlace', { name: name(r.ninja_ID) }) })
-  } catch (e) { error.value = e.message }
+      ? { design: 'Critical' as const, text: t('onWaitingList', { name: name(r.ninja_ID), position: r.position }) }
+      : { design: 'Positive', text: t('gotPlace', { name: name(r.ninja_ID) }) } satisfies Result)
+  } catch (e) { error.value = (e as Error).message }
   dialog.value = null
 }
 </script>
@@ -63,7 +65,7 @@ async function confirm() {
     <ui5-dialog :open="!!dialog" :header-text="dialog ? t('whoComes', { name: dialog.name }) : ''" @close="dialog = null">
       <div class="card-body">
         <ui5-checkbox v-for="c in children" :key="c.ID" :text="c.name"
-          @change="e => toggle(c.ID, e.target.checked)"></ui5-checkbox>
+          @change="(e: Event) => toggle(c.ID, (e.target as HTMLInputElement).checked)"></ui5-checkbox>
       </div>
       <ui5-bar slot="footer" design="Footer">
         <ui5-button slot="endContent" design="Emphasized" :disabled="!picked.size" @click="confirm">{{ t('confirm') }}</ui5-button>

@@ -5,7 +5,25 @@
 import { reactive } from 'vue'
 import { setLanguage } from '@ui5/webcomponents-base/dist/config/Language.js'
 
-const messages = {
+export type Lang = 'nl' | 'fr' | 'en'
+
+// English is the reference: every language must have exactly its keys
+// (a missing or misspelled translation is a type error).
+const en = {
+  appTitle: 'CoderDojo', skip: 'Skip to content', language: 'Language', signedInAs: 'Signed in as', notSignedIn: 'Not signed in',
+  navSessions: 'Sessions', navDojos: 'Dojos', navFamily: 'My family',
+  findDojo: 'Find a dojo', searchPlaceholder: 'Name or town', noDojos: 'No dojos found.', ages: 'Ages {min}–{max}',
+  upcoming: 'Upcoming sessions', places: '{n} places', placesOne: '1 place', signUp: 'Sign up', signInToSignUp: 'Sign in to sign up.',
+  whoComes: 'Who\'s coming to {name}?', confirm: 'Sign up', cancel: 'Cancel', close: 'Close',
+  gotPlace: '{name} has a place.', onWaitingList: '{name} is on the waiting list (position {position}).',
+  myChildren: 'My children', noChildren: 'You haven\'t added any children yet.', myPlaces: 'Signed up for',
+  noPlaces: 'Not signed up for anything yet.', waitingList: 'Waiting list', confirmed: 'Confirmed', cancelPlace: 'Cancel place',
+  cancelled: 'The place has been cancelled.', loading: 'Loading…', error: 'Something went wrong: {message}',
+}
+
+export type MessageKey = keyof typeof en
+
+const messages: Record<Lang, Record<MessageKey, string>> = {
   nl: {
     appTitle: 'CoderDojo', skip: 'Naar de inhoud', language: 'Taal', signedInAs: 'Ingelogd als', notSignedIn: 'Niet ingelogd',
     navSessions: 'Sessies', navDojos: 'Dojo\'s', navFamily: 'Mijn gezin',
@@ -28,32 +46,25 @@ const messages = {
     noPlaces: 'Aucune inscription pour l\'instant.', waitingList: 'Liste d\'attente', confirmed: 'Confirmé', cancelPlace: 'Désinscrire',
     cancelled: 'L\'inscription est annulée.', loading: 'Chargement…', error: 'Une erreur s\'est produite : {message}',
   },
-  en: {
-    appTitle: 'CoderDojo', skip: 'Skip to content', language: 'Language', signedInAs: 'Signed in as', notSignedIn: 'Not signed in',
-    navSessions: 'Sessions', navDojos: 'Dojos', navFamily: 'My family',
-    findDojo: 'Find a dojo', searchPlaceholder: 'Name or town', noDojos: 'No dojos found.', ages: 'Ages {min}–{max}',
-    upcoming: 'Upcoming sessions', places: '{n} places', placesOne: '1 place', signUp: 'Sign up', signInToSignUp: 'Sign in to sign up.',
-    whoComes: 'Who\'s coming to {name}?', confirm: 'Sign up', cancel: 'Cancel', close: 'Close',
-    gotPlace: '{name} has a place.', onWaitingList: '{name} is on the waiting list (position {position}).',
-    myChildren: 'My children', noChildren: 'You haven\'t added any children yet.', myPlaces: 'Signed up for',
-    noPlaces: 'Not signed up for anything yet.', waitingList: 'Waiting list', confirmed: 'Confirmed', cancelPlace: 'Cancel place',
-    cancelled: 'The place has been cancelled.', loading: 'Loading…', error: 'Something went wrong: {message}',
-  },
+  en,
 }
 
-export const state = reactive({ lang: localStorageGet('lang') || 'nl' })
+const isLang = (v: string | null): v is Lang => v === 'nl' || v === 'fr' || v === 'en'
+const stored = localStorageGet('lang')
 
-export function t(key, params = {}) {
-  const text = messages[state.lang]?.[key] ?? messages.en[key] ?? key
-  return text.replace(/\{(\w+)\}/g, (_, name) => params[name] ?? '')
+export const state = reactive<{ lang: Lang }>({ lang: isLang(stored) ? stored : 'nl' })
+
+export function t(key: MessageKey, params: Record<string, string | number> = {}): string {
+  const text = messages[state.lang][key]
+  return text.replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? ''))
 }
 
-export async function useLanguage(lang) {
+export async function useLanguage(lang: Lang): Promise<void> {
   state.lang = lang
   localStorageSet('lang', lang)
   document.documentElement.lang = lang
   await setLanguage(lang)
 }
 
-function localStorageGet(key) { try { return localStorage.getItem(key) } catch { return null } }
-function localStorageSet(key, value) { try { localStorage.setItem(key, value) } catch { /* private mode */ } }
+function localStorageGet(key: string): string | null { try { return localStorage.getItem(key) } catch { return null } }
+function localStorageSet(key: string, value: string): void { try { localStorage.setItem(key, value) } catch { /* private mode */ } }

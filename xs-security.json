@@ -1,0 +1,71 @@
+{
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.dojo-team",
+      "description": "dojo-team"
+    },
+    {
+      "name": "$XSAPPNAME.family",
+      "description": "family"
+    },
+    {
+      "name": "$XSAPPNAME.organisation-admin",
+      "description": "organisation-admin"
+    },
+    {
+      "name": "$XSAPPNAME.reviewer",
+      "description": "reviewer"
+    }
+  ],
+  "attributes": [
+    {
+      "name": "account",
+      "description": "account",
+      "valueType": "s",
+      "valueRequired": false
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "dojo-team",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.dojo-team"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "family",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.family"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "organisation-admin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.organisation-admin"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "reviewer",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.reviewer"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "userattributes",
+      "description": "generated",
+      "default-role-name": "Attributes of a User",
+      "scope-references": [],
+      "attribute-references": [
+        "account"
+      ]
+    }
+  ]
+}
