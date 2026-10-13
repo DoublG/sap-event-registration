@@ -1,0 +1,41 @@
+{
+  "name": "sap-event-registration",
+  "version": "0.1.0",
+  "description": "Feasibility study: the coderdojo-event-registration data model on SAP CAP",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@sap/cds": "^9.9.3",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^0.4",
+    "@cap-js/sqlite": "^2.4.1",
+    "@sap/cds-dk": "^9.9.6"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "build": "cds build --production",
+    "test": "node --test test/*.test.js"
+  },
+  "cds": {
+    "requires": {
+      "db": { "kind": "sqlite", "credentials": { "url": ":memory:" } },
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "parent":    { "password": "", "roles": ["family"], "attr": { "account": "a0000000-0000-0000-0000-000000000001" } },
+          "champion":  { "password": "", "roles": ["dojo-team"], "attr": { "account": "a0000000-0000-0000-0000-000000000002" } },
+          "orgadmin":  { "password": "", "roles": ["organisation-admin"] },
+          "reviewer":  { "password": "", "roles": ["reviewer"] }
+        }
+      },
+      "[production]": {
+        "db": "hana",
+        "auth": "xsuaa"
+      }
+    }
+  }
+}

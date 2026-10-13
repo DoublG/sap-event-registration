@@ -1,0 +1,4 @@
+ID;loginName;email;firstName;lastName;accountType;preferredLanguage;backgroundCheckStatus
+a0000000-0000-0000-0000-000000000001;parent;parent@example.org;Pat;Parent;adult;nl-be;not_requested
+a0000000-0000-0000-0000-000000000002;champion;champion@example.org;Chris;Champion;adult;nl-be;validated
+a0000000-0000-0000-0000-000000000003;other-parent;other@example.org;Olly;Other;adult;fr-be;not_requested

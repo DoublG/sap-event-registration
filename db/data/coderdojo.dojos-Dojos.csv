@@ -1,0 +1,4 @@
+ID;name;municipality_ID;status;kind;address;location_latitude;location_longitude;minAge;maxAge;languages;tagline;description
+d0000000-0000-0000-0000-000000000001;CoderDojo Gent;1;active;dojo;Kouter 1;51.050000;3.720000;7;17;"[""nl-be"",""en-us""]";Code with us in Ghent;Every second Saturday at the library.
+d0000000-0000-0000-0000-000000000002;CoderDojo Belgium;1;active;organisation;;;;7;17;"[""nl-be"",""fr-be""]";;The organisation's own events.
+d0000000-0000-0000-0000-000000000003;CoderDojo Draft;1;draft;dojo;;;;7;17;"[""nl-be""]";;
