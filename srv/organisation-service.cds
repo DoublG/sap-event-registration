@@ -35,3 +35,7 @@ service OrganisationService {
         backgroundCheckSubmittedAt, backgroundCheckExpiresAt
     } where accountType = 'adult';
 }
+
+// Fiori elements edits through drafts.
+annotate OrganisationService.Dojos with @odata.draft.enabled;
+annotate OrganisationService.Badges with @odata.draft.enabled;

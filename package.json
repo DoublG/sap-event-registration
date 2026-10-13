@@ -4,7 +4,9 @@
   "description": "Feasibility study: the coderdojo-event-registration data model on SAP CAP",
   "private": true,
   "license": "UNLICENSED",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@sap/cds": "^9.9.3",
     "express": "^4"
@@ -18,18 +20,61 @@
     "start": "cds-serve",
     "watch": "cds watch",
     "build": "cds build --production",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "dev:site": "npm --prefix app/site run dev",
+    "build:site": "npm --prefix app/site run build",
+    "postinstall": "npm --prefix app/site install"
   },
   "cds": {
     "requires": {
-      "db": { "kind": "sqlite", "credentials": { "url": ":memory:" } },
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": ":memory:"
+        }
+      },
       "auth": {
         "kind": "mocked",
         "users": {
-          "parent":    { "password": "", "roles": ["family"], "attr": { "account": "a0000000-0000-0000-0000-000000000001" } },
-          "champion":  { "password": "", "roles": ["dojo-team"], "attr": { "account": "a0000000-0000-0000-0000-000000000002" } },
-          "orgadmin":  { "password": "", "roles": ["organisation-admin"] },
-          "reviewer":  { "password": "", "roles": ["reviewer"] }
+          "parent": {
+            "password": "",
+            "roles": [
+              "family"
+            ],
+            "attr": {
+              "account": "a0000000-0000-0000-0000-000000000001"
+            }
+          },
+          "other-parent": {
+            "password": "",
+            "roles": [
+              "family"
+            ],
+            "attr": {
+              "account": "a0000000-0000-0000-0000-000000000003"
+            }
+          },
+          "champion": {
+            "password": "",
+            "roles": [
+              "dojo-team"
+            ],
+            "attr": {
+              "account": "a0000000-0000-0000-0000-000000000002"
+            }
+          },
+          "orgadmin": {
+            "password": "",
+            "roles": [
+              "organisation-admin"
+            ]
+          },
+          "reviewer": {
+            "password": "",
+            "roles": [
+              "reviewer"
+            ]
+          }
         }
       },
       "[production]": {

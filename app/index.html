@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoderDojo on CAP</title>
+    <style>
+        body { font-family: "72", system-ui, sans-serif; margin: 2rem 1rem; max-width: 44rem; background: #f5f6f7; color: #1d2d3e; }
+        a { color: #0064d9; }
+        li { margin: .4rem 0; }
+    </style>
+</head>
+<body>
+    <h1>CoderDojo on CAP (development)</h1>
+    <h2>Families (Vue + UI5 Web Components)</h2>
+    <ul><li><a href="/site/dist/index.html">Family site</a> (after <code>npm run build:site</code>; or <code>npm run dev:site</code> on port 5173)</li></ul>
+    <h2>Management (Fiori elements)</h2>
+    <ul>
+        <li><a href="/dojo-events/webapp/index.html">My dojo's sessions</a>: log in as <code>champion</code></li>
+        <li><a href="/manage-dojos/webapp/index.html">Dojos</a>: log in as <code>orgadmin</code></li>
+        <li><a href="/volunteer-applications/webapp/index.html">Volunteer applications</a>: log in as <code>reviewer</code></li>
+    </ul>
+    <p>Mocked logins have no password (<code>package.json</code>, <code>cds.requires.auth</code>).</p>
+</body>
+</html>

@@ -17,5 +17,10 @@ service DojoAdminService {
 
     @restrict: [{ grant: ['READ', 'UPDATE'],
                   where: 'exists event.dojo.memberships[user.ID = $user.account and status = ''active'' and role != ''youth_mentor'']' }]
-    entity Registrations as projection on e.Registrations;
+    entity Registrations as projection on e.Registrations {
+        *, ninja.name as ninjaName, ninja.familyName as ninjaFamilyName
+    };
 }
+
+// Fiori elements edits through drafts.
+annotate DojoAdminService.Events with @odata.draft.enabled;

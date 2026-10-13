@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volunteer applications</title>
+    <style>html, body, body > div, #container, #container-uiarea { height: 100%; }</style>
+    <!-- Standalone start for development (cds watch). In production the app
+         runs in the SAP Build Work Zone launchpad, which loads UI5 itself. -->
+    <script id="sap-ui-bootstrap"
+        src="https://ui5.sap.com/1.148.12/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-resource-roots='{ "coderdojo.volunteerapplications": "./" }'
+        data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-compat-version="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frame-options="trusted">
+    </script>
+</head>
+<body class="sapUiBody sapUiSizeCompact" id="content">
+    <div data-sap-ui-component data-name="coderdojo.volunteerapplications" data-id="container"
+         data-settings='{"id" : "volunteer-applications"}' data-handle-validation="true"></div>
+</body>
+</html>

@@ -113,7 +113,7 @@ Two consequences:
 
 Migrating the data means unpacking each JSON `translations` value into `_texts` rows.
 
-### 3. No pages: the UI is a separate project
+### 3. No pages: the UI is a separate project (now prototyped both ways)
 
 Django renders every page itself, and most of the repository's behaviour lives in views and templates
 (htmx partials, forms, the management shell, accessibility work, the help-centre links). CAP stops at
@@ -125,6 +125,31 @@ the service layer. Two options:
 - **A separate front end** (React, Vue, SvelteKit or plain HTML) on the OData/REST services. This
   covers everything, but it means rewriting all 220 templates and their CSS and JavaScript, and
   re-checking WCAG 2.2 AA.
+
+This repository now does both:
+
+**Management: Fiori elements.** There are three apps in `app/`:
+- *My dojo's sessions*: a dojo team's sessions with their sign-ups, editable through drafts;
+- *Dojos*: the organisation's dojos;
+- *Volunteer applications*: the reviewers' worklist.
+
+Each one is an `annotations.cds` (about 50–80 lines) plus a standard app descriptor. Lists, filters,
+object pages, editing with drafts, and labels in three languages all come from the annotations, and
+access comes from the service's `@restrict`. The equivalent Django pages took views, forms, templates
+and htmx partials each, so **this is the part of the UI where CAP saves the most work**. What Fiori
+elements doesn't give you is anything off its floorplans: the attendance list's one-click buttons,
+award pickers and the segment builder would need custom extensions (building blocks, custom sections
+or columns).
+
+**Families: Vue 3 with SAP UI5 Web Components.** `app/site` covers the session list with sign-up
+(including the waiting-list messages), the dojo finder and "my family" with cancelling. It's in three
+languages, works at 360px wide, and calls the same `/public` and `/family` services. That took about
+300 lines for three pages. The Django site has about 120 family and public templates, so a complete
+version stays the large job in the estimate below. Two findings:
+- **UI5 Web Components load SAP's "72" font from the jsdelivr CDN by default**, which the Django site
+  forbids on privacy grounds. `app/site` switches that off and serves the font files itself.
+- **The visual style becomes SAP's (Horizon theme)**, not CoderDojo's. Restyling needs a custom theme
+  built with the UI5 Theme Designer or CSS variables, and that's extra work if the brand matters.
 
 ## Rough effort
 
@@ -140,8 +165,8 @@ site. The UI rows dominate whichever way they go.
 | Mail engine, outbox, schedules, bounces | 3–4 weeks |
 | Privacy: export, erasure, retention, audit logging | 3–4 weeks |
 | GIS search on HANA | 1 week |
-| Dashboards as Fiori elements apps | 6–10 weeks |
-| Public site and family pages as a new front end, accessible, in 3 languages | 10–16 weeks |
+| Dashboards as Fiori elements apps (three done here as a start) | 6–10 weeks |
+| Public site and family pages in Vue + UI5 Web Components, accessible, in 3 languages (three pages done here) | 10–16 weeks |
 | Tests (1,294 to rewrite or replace) | spread over the above, roughly +30% |
 | Data migration (integer ids to UUIDs, translations JSON to `_texts`, files) | 1–2 weeks |
 | BTP setup (HANA Cloud, IAS/XSUAA, Audit Log, Job Scheduling, CI/CD) | 2–3 weeks |
@@ -151,6 +176,12 @@ site. The UI rows dominate whichever way they go.
 
 - `@PersonalData` is declared for the core entities only, not the full registry.
 - Only `signUp` and `cancel` are ported. No other business rules are.
-- There is no UI and no Fiori annotations.
+- The UIs are prototypes: three Fiori elements apps and three Vue pages. There's no login flow (CAP's
+  mocked users stand in for IAS), no account or child management, and no dojo-team actions beyond
+  editing a session.
+- The Fiori apps couldn't be opened in a browser while building them here, because the sandbox
+  blocks `ui5.sap.com`. Their OData side (metadata, labels in three languages, the draft edit and
+  activate calls) was checked with requests. The Vue site was checked in headless Chromium: sign-up,
+  waiting list, cancellation with promotion, three languages, a 360px screen.
 - `on_delete` behaviour isn't enforced beyond compositions; the mapping above says what each case needs.
 - GIS stays as plain decimals: there is no distance search yet.

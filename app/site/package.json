@@ -1,0 +1,24 @@
+{
+  "name": "coderdojo-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The families' site: Vue 3 with SAP UI5 Web Components, on the CAP services",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@sap-theming/theming-base-content": "^11.36.4",
+    "@ui5/webcomponents": "^2.27.2",
+    "@ui5/webcomponents-fiori": "^2.27.2",
+    "@ui5/webcomponents-icons": "^2.27.2",
+    "vue": "^3.5.43",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.10",
+    "vite": "^8.3.4"
+  }
+}

@@ -15,6 +15,10 @@ would be to switch frameworks. **The findings are in [MAPPING.md](MAPPING.md).**
 | `srv/family-service.cds/.js` | A family's children and places, plus `signUp` / `cancel` (the port of `events/registrations.py`) |
 | `srv/dojo-admin-service.cds` | A dojo's team: only an active champion or mentor of that dojo |
 | `srv/organisation-service.cds` | The organisation dashboard: admin and reviewer roles |
+| `app/dojo-events/`, `app/manage-dojos/`, `app/volunteer-applications/` | **Management UIs in SAP Fiori elements**: a dojo team's sessions and sign-ups, the organisation's dojos, the reviewers' applications |
+| `app/site/` | **The families' site in Vue 3 with SAP UI5 Web Components**: sessions and sign-up, the dojo finder, my family |
+| `_i18n/` | The Fiori labels in English, Dutch and French |
+| `.mcp.json` | SAP's MCP servers for AI assistants: CAP (`@cap-js/mcp-server`), Fiori tools, UI5 |
 | `test/` | `cds.test` tests for the services and the waiting-list rules |
 
 ## Running it
@@ -22,10 +26,20 @@ would be to switch frameworks. **The findings are in [MAPPING.md](MAPPING.md).**
 Needs Node.js 20 or later.
 
 ```sh
-npm install
-npm test          # 13 tests, SQLite in memory
-npm run watch     # http://localhost:4004, mocked logins: parent, champion, orgadmin, reviewer (no password)
+npm install        # also installs the Vue site (app/site)
+npm test           # 13 tests, SQLite in memory
+npm run build:site # build the Vue site once, so CAP serves it
+npm run watch      # http://localhost:4004: links to every UI
+npm run dev:site   # or: the Vue site with hot reload on http://localhost:5173
 ```
+
+Mocked logins have no password:
+- `parent` and `other-parent` (the family site);
+- `champion` (*My dojo's sessions*);
+- `orgadmin` (*Dojos*);
+- `reviewer` (*Volunteer applications*).
+
+The Fiori apps load SAPUI5 from `ui5.sap.com`.
 
 Production settings (`[production]` in `package.json`) point at SAP HANA Cloud and XSUAA; nothing
 is deployed.

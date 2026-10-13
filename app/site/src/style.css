@@ -1,0 +1,15 @@
+/* Layout only: colours, fonts and spacing come from the UI5 theme (sap_horizon). */
+html, body { margin: 0; background: var(--sapBackgroundColor); color: var(--sapTextColor); font-family: var(--sapFontFamily); }
+main { max-width: 64rem; margin: 0 auto; padding: 1rem; box-sizing: border-box; }
+.toolbar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+.grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr)); }
+.card-body { padding: 0 1rem 1rem; display: flex; flex-direction: column; gap: .5rem; }
+.row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.skip-link { position: absolute; left: -999px; }
+.skip-link:focus { left: 1rem; top: 1rem; z-index: 10; background: var(--sapBackgroundColor); padding: .5rem; }
+ui5-message-strip { margin-bottom: 1rem; }
+/* A checkbox only reacts on its box and label: don't stretch it across the row. */
+.card-body ui5-checkbox { align-self: flex-start; }
+ui5-busy-indicator { display: block; padding: 2rem 0; }
+.toolbar ui5-select { width: 12rem; }
+.grid ui5-card { width: 100%; }
